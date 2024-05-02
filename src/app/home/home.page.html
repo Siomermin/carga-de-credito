@@ -1,0 +1,23 @@
+<ion-content [fullscreen]="true">
+  <ion-header >
+    <ion-toolbar>
+        <ion-button
+          (click)="logout()"
+          expand="block"
+          shape="round"
+          color="danger"
+        >
+        Cerrar sesión
+        </ion-button>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <strong>{{ loggedUser?.email }}</strong>
+  </div>
+
+  <pre>
+    {{ loggedUser.name }}
+
+  </pre>
+</ion-content>

@@ -1,0 +1,31 @@
+a {
+  text-decoration: none; /* Remove underline */
+  color: #b1afb6; /* Dark Purple heading */
+
+}
+
+ion-content {
+  --background: linear-gradient(to right, #361d85, #410a57); /* Light & Dark Purple Gradient */
+}
+
+ion-fab-button {
+  width: 50px; /* Adjust the width as desired */
+  height: 50px; /* Adjust the height as desired */
+}
+
+.form-container {
+  background: linear-gradient(to right, #311780, #4a1163); /* Light & Dark Purple Gradient */
+  padding: 20px; /* Adjust padding as needed */
+  border-radius: 5px; /* Add a subtle border radius */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: 100%; /* Make the form responsive */
+  max-width: 400px; /* Optional: Set a maximum width for larger screens */
+}
+
+
+h1 {
+  color: #b1afb6; /* Dark Purple heading */
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+}

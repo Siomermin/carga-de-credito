@@ -1,0 +1,52 @@
+<ion-content class="ion-padding">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <div class="container">
+    <h1>Iniciar sesión</h1>
+
+
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="form-container">
+    <ion-item>
+      <ion-input label="Correo electrónico" formControlName="email" type="text"></ion-input>
+      <ion-text color="danger" *ngIf="isValidField('email')">
+        {{ getErrorByField("email") }}
+      </ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Contraseña" formControlName="password" type="password"></ion-input>
+      <ion-text color="danger" *ngIf="isValidField('password')">
+        {{ getErrorByField("password") }}
+      </ion-text>
+    </ion-item>
+
+    <ion-button class="ion-padding" color="dark" type="submit" expand="block" [disabled]="myForm.invalid">
+      Iniciar sesión
+    </ion-button>
+  </form>
+
+  <ion-text>
+    <a routerLink="/auth/register"> ¿No tienes cuenta? ¡Regístrate!</a>
+  </ion-text>
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" color="dark">
+    <ion-fab-button color="dark">
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="dark" (click)="fastLogin(user.email, user.password)" *ngFor="let user of testUsers | slice : 0 : 3">
+        {{ user.profile }}
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
+
+<style scoped>
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90vh;
+  }
+  </style>

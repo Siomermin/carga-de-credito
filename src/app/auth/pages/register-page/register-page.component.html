@@ -1,0 +1,51 @@
+<ion-content class="ion-padding">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <div class="container">
+    <h1>Registro</h1>
+
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="form-container">
+      <ion-item>
+        <ion-input
+          label="Correo electrónico"
+          formControlName="email"
+          type="text"
+        ></ion-input>
+        <ion-text color="danger" *ngIf="isValidField('email')">
+          {{ getErrorByField("email") }}</ion-text
+        >
+      </ion-item>
+
+      <ion-item>
+        <ion-input
+          label="Contraseña"
+          formControlName="password"
+          type="text"
+        ></ion-input>
+        <ion-text color="danger" *ngIf="isValidField('password')">
+          {{ getErrorByField("password") }}
+        </ion-text>
+      </ion-item>
+      <ion-button
+        class="ion-padding"
+        color="dark"
+        type="submit"
+        expand="block"
+        [disabled]="myForm.invalid"
+      >
+        Registrarse
+      </ion-button>
+    </form>
+
+    <a routerLink="/auth/login"> Ya tenes cuenta? Inicia sesión! </a>
+  </div>
+</ion-content>
+
+<style scoped>
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90vh;
+  }
+  </style>
