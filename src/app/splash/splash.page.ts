@@ -18,14 +18,14 @@ export class SplashPage implements OnInit {
   ngOnInit(): void {
 
     setTimeout(() => {
-      // this.renderer.addClass(this.h1Element.nativeElement, 'tracking-in-expand');
-      // this.renderer.addClass(this.h3Element.nativeElement, 'tracking-in-expand');
-      this.renderer.addClass(this.imgElement.nativeElement, 'rotate-horizontal-center');
+      this.renderer.addClass(this.h1Element.nativeElement, 'rotate-diagonal-bottom-left');
+      this.renderer.addClass(this.h3Element.nativeElement, 'rotate-diagonal-bottom-left');
+      this.renderer.addClass(this.imgElement.nativeElement, 'rotate-diagonal-top-left');
     }, 1000); // Add classes after 1 second (1000 milliseconds)
 
     setTimeout(() => {
       this.router.navigateByUrl('auth/login');
-    }, 3000);
+    }, 4000);
 
 
   }

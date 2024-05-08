@@ -1,23 +1,28 @@
 <ion-content [fullscreen]="true">
-  <ion-header >
-    <ion-toolbar>
-        <ion-button
-          (click)="logout()"
-          expand="block"
-          shape="round"
-          color="danger"
-        >
-        Cerrar sesión
-        </ion-button>
-    </ion-toolbar>
-  </ion-header>
+  <ion-text class="ion-text-center">
+    <h1>Carga Credito</h1>
+  </ion-text>
 
-  <div id="container">
-    <strong>{{ loggedUser?.email }}</strong>
+  <ion-card color="dark">
+    <ion-card-header class="card-container">
+      <ion-card-title>100</ion-card-title>
+      <ion-card-subtitle>Creditos</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content class="ion-text-center">
+      {{ loggedUser?.email }}
+    </ion-card-content>
+  </ion-card>
+
+  <div class="img-container">
+    <ion-img src="../../assets/qr.png" > </ion-img>
   </div>
-
-  <pre>
-    {{ loggedUser.name }}
-
-  </pre>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button (click)="logout()" expand="full" color="danger">
+      <ion-icon name="log-out"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

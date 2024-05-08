@@ -1,27 +1,74 @@
-#container {
-  text-align: center;
+* {
+  overflow: hidden;
+}
 
+
+.creditos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ion-content {
+  position: relative;
+}
+
+.img-container {
   position: absolute;
+  bottom: 20px;
   left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  width: 100%;  /* Optional: Set image width if needed */
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+h1 {
+  font-weight: 600;
+  font-size: 40px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+ion-text {
+  margin-top: 15px;
 }
 
-#container a {
-  text-decoration: none;
+.card-container {
+  display: flex;
+  align-items: center;
+}
+
+
+/* Breakpoint para pantallas con altura menor o igual a 667px */
+@media (max-height: 667px) {
+  ion-card {
+    margin-top: 50px; /* Margen superior para pantallas pequeñas */
+
+  }
+
+  ion-card-title{
+    font-size: 40px;
+  }
+
+  ion-card-subtitle {
+    font-size: 15px;
+  }
+
+
+}
+
+/* Breakpoint para pantallas con altura mayor a 800px */
+@media (min-height: 800px) {
+  ion-card {
+    margin-top: 150px; /* Margen superior para pantallas grandes */
+  }
+
+  ion-card-title{
+    font-size: 70px;
+  }
+
+  ion-card-subtitle {
+    font-size: 20px;
+  }
+
+  ion-card-content {
+    font-size: 20px;
+
+  }
 }

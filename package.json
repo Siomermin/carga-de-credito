@@ -1,5 +1,5 @@
 {
-  "name": "auth-app",
+  "name": "chat-aula",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -33,6 +33,7 @@
     "firebase": "^10.7.1",
     "firebase-tools": "^13.0.3",
     "ionicons": "^7.0.0",
+    "nes.css": "^2.3.0",
     "nvm": "^0.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
