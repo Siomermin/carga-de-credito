@@ -21,7 +21,7 @@ export class SplashPage implements OnInit {
       this.renderer.addClass(this.h1Element.nativeElement, 'rotate-diagonal-bottom-left');
       this.renderer.addClass(this.h3Element.nativeElement, 'rotate-diagonal-bottom-left');
       this.renderer.addClass(this.imgElement.nativeElement, 'rotate-diagonal-top-left');
-    }, 1000); // Add classes after 1 second (1000 milliseconds)
+    }, 3000); // Add classes after 1 second (1000 milliseconds)
 
     setTimeout(() => {
       this.router.navigateByUrl('auth/login');
