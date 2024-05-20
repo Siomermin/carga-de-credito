@@ -5,7 +5,7 @@
 
   <ion-card color="dark">
     <ion-card-header class="card-container">
-      <ion-card-title>100</ion-card-title>
+      <ion-card-title>{{ totalCredits }}</ion-card-title>
       <ion-card-subtitle>Creditos</ion-card-subtitle>
     </ion-card-header>
 
@@ -14,7 +14,7 @@
     </ion-card-content>
   </ion-card>
 
-  <div class="img-container">
+  <div class="img-container" (click)="scan()">
     <ion-img src="../../assets/qr.png" > </ion-img>
   </div>
 </ion-content>
