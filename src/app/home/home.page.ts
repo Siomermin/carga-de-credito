@@ -3,6 +3,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { ToastService } from '../shared/services/toast.service';
 import { FirestoreService } from '../shared/services/firestore.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +14,13 @@ export class HomePage implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private firestoreService = inject(FirestoreService);
-  public isLoading: boolean = false;
+  private alertController = inject(AlertController);
 
-  isSupported = false;
-
+  public isSupported: boolean = false;
   public loggedUser?: any = JSON.parse(localStorage.getItem('loggedUser')!);
   public profile: string = '';
   barcodes: Barcode[] = [];
-  totalCredits = 0;
+  public totalCredits: number = 0;
 
   private barcodeCredits: { [key: string]: number } = {
     '8c95def646b6127282ed50454b73240300dccabc': 10,
@@ -49,7 +49,7 @@ export class HomePage implements OnInit {
       const granted = await this.requestPermissions();
 
       if (!granted) {
-        this.toastService.presentToast('No dio permisos', 'middle', 'danger');
+        this.toastService.presentToast('No dio permisos!', 'middle', 'danger');
         return;
       }
 
@@ -67,10 +67,11 @@ export class HomePage implements OnInit {
           } else if (scannedCount === 1 && this.profile === 'admin') {
             this.totalCredits += credits;
             this.scannedBarcodes[barcode.rawValue] = 2;
+            this.toastService.presentToast('Créditos agregados: ' + credits, 'middle', 'success');
           } else if (scannedCount === 2 && this.profile === 'admin') {
             this.toastService.presentToast('No es posible agregar este crédito más de dos veces para el admin!', 'middle', 'danger');
           } else {
-            this.toastService.presentToast('No es posible agregar este crédito más de una vez: ' + barcode.rawValue, 'middle', 'danger');
+            this.toastService.presentToast('No es posible agregar este crédito más de una vez!', 'middle', 'danger');
           }
 
           if (this.loggedUser) {
@@ -78,11 +79,11 @@ export class HomePage implements OnInit {
             await this.firestoreService.updateUserScannedBarcodes(this.loggedUser.uid, this.scannedBarcodes);
           }
         } else {
-          this.toastService.presentToast('Crédito desconocido: ' + barcode.rawValue, 'middle', 'danger');
+          this.toastService.presentToast('Crédito desconocido!', 'middle', 'danger');
         }
       }
     } catch (error: any) {
-      this.toastService.presentToast('Error al agregar crédito: ' + error.message, 'middle', 'danger');
+      this.toastService.presentToast('Error al agregar crédito!', 'middle', 'danger');
     }
   }
 
@@ -91,21 +92,36 @@ export class HomePage implements OnInit {
       const { camera } = await BarcodeScanner.requestPermissions();
       return camera === 'granted' || camera === 'limited';
     } catch (error: any) {
-      this.toastService.presentToast('Error al pedir permisos: ' + error.message, 'middle', 'danger');
+      this.toastService.presentToast('Error al pedir permisos!', 'middle', 'danger');
       return false;
     }
   }
 
   async resetCredits(): Promise<void> {
-    try {
-      this.totalCredits = 0;
-      if (this.loggedUser) {
-        await this.firestoreService.updateUserCredits(this.loggedUser.uid, this.totalCredits);
-        this.toastService.presentToast('Se limpiaron los créditos!', 'middle', 'success');
-      }
-    } catch (error: any) {
-      this.toastService.presentToast('Error al limpiar los créditos: ' + error.message, 'middle', 'danger');
-    }
+    const alert = await this.alertController.create({
+      header: 'Limpiar Créditos',
+      message: '¿Está seguro que desea limpiar los créditos?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Aceptar',
+          handler: async () => {
+            // Proceed with credit reset and data deletion if confirmed
+            this.totalCredits = 0;
+            if (this.loggedUser) {
+              await this.firestoreService.deleteUser(this.loggedUser.uid); // Call a new function to deleteUser
+              const userData = await this.firestoreService.getUserData(this.loggedUser.uid);
+              this.scannedBarcodes = userData.scannedBarcodes || {};
+              this.toastService.presentToast('Se limpiaron los créditos!', 'middle', 'success');
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   logout() {

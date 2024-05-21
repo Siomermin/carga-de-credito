@@ -1,6 +1,5 @@
 <ion-content [fullscreen]="true">
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-  <br><br>
+  <br /><br />
   <ion-text class="ion-text-center title">
     <h1>Carga Crédito</h1>
   </ion-text>
@@ -15,18 +14,19 @@
       <ion-card-content class="ion-text-center">
         {{ loggedUser?.email }}
       </ion-card-content>
+      <ion-button
+        expand="full"
+        color="tertiary"
+        (click)="resetCredits()"
+        class="reset-button"
+      >
+        Limpiar Créditos
+      </ion-button>
     </ion-card>
-    <!-- Add the reset button here -->
-
   </div>
 
-
-
-  <div class="img-container" (click)="scan()">
-    <ion-button expand="full" color="tertiary" (click)="resetCredits()" class="reset-button">
-      Limpiar Créditos
-    </ion-button>
-    <ion-img src="../../assets/qr.png"> </ion-img>
+  <div class="img-container">
+    <img (click)="scan()" src="../../assets/qr.png" />
   </div>
 </ion-content>
 

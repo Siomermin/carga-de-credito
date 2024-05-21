@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { deleteDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -37,6 +38,11 @@ export class FirestoreService {
     } else {
       return {};
     }
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    const userDoc = doc(this.firestore, `users/${userId}`);
+    await deleteDoc(userDoc);
   }
 
   async updateUserCredits(userId: string, credits: number): Promise<void> {

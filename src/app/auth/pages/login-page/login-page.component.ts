@@ -43,9 +43,12 @@ export class LoginPageComponent implements OnInit {
 
   login(email: string, password: string): void {
     this.isLoading = true;
-    this.authService.login(email, password).then(() => {
-      this.isLoading = false;
-    });
+    setTimeout(() => {
+      this.authService.login(email, password).then(() => {
+        this.isLoading = false;
+      });
+    }, 2000);
+
   }
 
   fastLogin(email: string, password: string): void {
