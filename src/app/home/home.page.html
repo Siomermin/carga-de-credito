@@ -1,21 +1,32 @@
 <ion-content [fullscreen]="true">
-  <ion-text class="ion-text-center">
-    <h1>Carga Credito</h1>
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <br><br>
+  <ion-text class="ion-text-center title">
+    <h1>Carga Crédito</h1>
   </ion-text>
 
-  <ion-card color="dark">
-    <ion-card-header class="card-container">
-      <ion-card-title>{{ totalCredits }}</ion-card-title>
-      <ion-card-subtitle>Creditos</ion-card-subtitle>
-    </ion-card-header>
+  <div class="credits-container">
+    <ion-card color="dark" class="card">
+      <ion-card-header class="card-container">
+        <ion-card-title>{{ totalCredits }}</ion-card-title>
+        <ion-card-subtitle>Créditos</ion-card-subtitle>
+      </ion-card-header>
 
-    <ion-card-content class="ion-text-center">
-      {{ loggedUser?.email }}
-    </ion-card-content>
-  </ion-card>
+      <ion-card-content class="ion-text-center">
+        {{ loggedUser?.email }}
+      </ion-card-content>
+    </ion-card>
+    <!-- Add the reset button here -->
+
+  </div>
+
+
 
   <div class="img-container" (click)="scan()">
-    <ion-img src="../../assets/qr.png" > </ion-img>
+    <ion-button expand="full" color="tertiary" (click)="resetCredits()" class="reset-button">
+      Limpiar Créditos
+    </ion-button>
+    <ion-img src="../../assets/qr.png"> </ion-img>
   </div>
 </ion-content>
 

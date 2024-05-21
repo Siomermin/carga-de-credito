@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '../auth/services/auth.service';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { ToastService } from '../shared/services/toast.service';
+import { FirestoreService } from '../shared/services/firestore.service';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +12,13 @@ import { ToastService } from '../shared/services/toast.service';
 export class HomePage implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private firestoreService = inject(FirestoreService);
+  public isLoading: boolean = false;
 
   isSupported = false;
 
   public loggedUser?: any = JSON.parse(localStorage.getItem('loggedUser')!);
+  public profile: string = '';
   barcodes: Barcode[] = [];
   totalCredits = 0;
 
@@ -24,14 +28,20 @@ export class HomePage implements OnInit {
     '2786f4877b9091dcad7f35751bfcf5d5ea712b2f': 100
   };
 
+  private scannedBarcodes: { [key: string]: number } = {};
+
   constructor() {}
 
-  ngOnInit() {
-    BarcodeScanner.isSupported().then((result) => {
-      this.isSupported = result.supported;
-    }).catch(error => {
-      this.toastService.presentToast('Error checking support: ' + error.message, 'middle', 'danger');
-    });
+  async ngOnInit() {
+    if (this.loggedUser) {
+      const userEmail = this.loggedUser.email;
+      const userProfile = this.authService.testUsers.find(user => user.email === userEmail)?.profile || 'usuario';
+      this.profile = userProfile;
+
+      this.totalCredits = await this.firestoreService.getUserCredits(this.loggedUser.uid);
+      const userData = await this.firestoreService.getUserData(this.loggedUser.uid);
+      this.scannedBarcodes = userData.scannedBarcodes || {};
+    }
   }
 
   async scan(): Promise<void> {
@@ -46,16 +56,33 @@ export class HomePage implements OnInit {
       const { barcodes } = await BarcodeScanner.scan();
 
       for (const barcode of barcodes) {
-        this.barcodes.push(barcode);
         if (this.barcodeCredits[barcode.rawValue]) {
-          this.totalCredits += this.barcodeCredits[barcode.rawValue];
-          this.toastService.presentToast('Creditos agregados: ' + this.barcodeCredits[barcode.rawValue], 'middle', 'success');
+          const credits = this.barcodeCredits[barcode.rawValue];
+          const scannedCount = this.scannedBarcodes[barcode.rawValue] || 0;
+
+          if (scannedCount === 0) {
+            this.totalCredits += credits;
+            this.toastService.presentToast('Créditos agregados: ' + credits, 'middle', 'success');
+            this.scannedBarcodes[barcode.rawValue] = 1;
+          } else if (scannedCount === 1 && this.profile === 'admin') {
+            this.totalCredits += credits;
+            this.scannedBarcodes[barcode.rawValue] = 2;
+          } else if (scannedCount === 2 && this.profile === 'admin') {
+            this.toastService.presentToast('No es posible agregar este crédito más de dos veces para el admin!', 'middle', 'danger');
+          } else {
+            this.toastService.presentToast('No es posible agregar este crédito más de una vez: ' + barcode.rawValue, 'middle', 'danger');
+          }
+
+          if (this.loggedUser) {
+            await this.firestoreService.updateUserCredits(this.loggedUser.uid, this.totalCredits);
+            await this.firestoreService.updateUserScannedBarcodes(this.loggedUser.uid, this.scannedBarcodes);
+          }
         } else {
-          this.toastService.presentToast('QR Desconocido: ' + barcode.rawValue, 'middle', 'danger');
+          this.toastService.presentToast('Crédito desconocido: ' + barcode.rawValue, 'middle', 'danger');
         }
       }
     } catch (error: any) {
-      this.toastService.presentToast('Error al escanear QR: ' + error.message, 'middle', 'danger');
+      this.toastService.presentToast('Error al agregar crédito: ' + error.message, 'middle', 'danger');
     }
   }
 
@@ -64,8 +91,20 @@ export class HomePage implements OnInit {
       const { camera } = await BarcodeScanner.requestPermissions();
       return camera === 'granted' || camera === 'limited';
     } catch (error: any) {
-      this.toastService.presentToast('Error requesting permissions: ' + error.message, 'middle', 'danger');
+      this.toastService.presentToast('Error al pedir permisos: ' + error.message, 'middle', 'danger');
       return false;
+    }
+  }
+
+  async resetCredits(): Promise<void> {
+    try {
+      this.totalCredits = 0;
+      if (this.loggedUser) {
+        await this.firestoreService.updateUserCredits(this.loggedUser.uid, this.totalCredits);
+        this.toastService.presentToast('Se limpiaron los créditos!', 'middle', 'success');
+      }
+    } catch (error: any) {
+      this.toastService.presentToast('Error al limpiar los créditos: ' + error.message, 'middle', 'danger');
     }
   }
 

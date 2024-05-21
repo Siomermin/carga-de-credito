@@ -1,5 +1,6 @@
 * {
   overflow: hidden;
+  margin: 0;
 }
 
 
@@ -10,7 +11,22 @@
 }
 
 ion-content {
-  position: relative;
+  --background: linear-gradient(to right, #361d85, #410a57); /* Light & Dark Purple Gradient */
+}
+
+
+
+.button-image-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Optional: Vertically align button and image */
+}
+
+.credits-container {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  width: 100%;  /* Optional: Set image width if needed */
 }
 
 .img-container {
@@ -35,8 +51,14 @@ ion-text {
 }
 
 
+
+
 /* Breakpoint para pantallas con altura menor o igual a 667px */
 @media (max-height: 667px) {
+
+  .title {
+    visibility: hidden;
+  }
   ion-card {
     margin-top: 50px; /* Margen superior para pantallas pequeñas */
 
@@ -55,8 +77,12 @@ ion-text {
 
 /* Breakpoint para pantallas con altura mayor a 800px */
 @media (min-height: 800px) {
+  .title {
+    margin-top: 20px;
+  }
+
   ion-card {
-    margin-top: 150px; /* Margen superior para pantallas grandes */
+    margin: 150px 15px 0px 15px; /* Margen superior para pantallas grandes */
   }
 
   ion-card-title{
