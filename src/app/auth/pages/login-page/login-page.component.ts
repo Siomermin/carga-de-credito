@@ -46,6 +46,7 @@ export class LoginPageComponent implements OnInit {
     setTimeout(() => {
       this.authService.login(email, password).then(() => {
         this.isLoading = false;
+        this.myForm.reset(); // Optionally reset after successful login
       });
     }, 2000);
 
