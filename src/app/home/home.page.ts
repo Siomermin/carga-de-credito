@@ -46,6 +46,26 @@ export class HomePage implements OnInit {
 
   async scan(): Promise<void> {
     try {
+
+
+      const isModuleAvailable = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+
+      if (!isModuleAvailable) {
+        // Si el módulo no está disponible, instalarlo
+        await BarcodeScanner.installGoogleBarcodeScannerModule();
+        this.toastService.presentToast('Instalación del módulo de escaneo de Google en curso...', 'middle', 'danger');
+
+        // Escuchar el progreso de la instalación
+        BarcodeScanner.addListener('googleBarcodeScannerModuleInstallProgress', (progress: any) => {
+          console.log('Progreso de instalación del escáner:', progress);
+
+          if (progress.value === 100) {
+            this.toastService.presentToast('Instalación del módulo de escaneo de Google completa', 'middle', 'success');
+          }
+        });
+        return;  // Salir para esperar a que la instalación termine
+      }
+
       const granted = await this.requestPermissions();
 
       if (!granted) {
@@ -83,7 +103,7 @@ export class HomePage implements OnInit {
         }
       }
     } catch (error: any) {
-      this.toastService.presentToast('Error al agregar crédito!', 'middle', 'danger');
+      this.toastService.presentToast(error.message, 'middle', 'danger');
     }
   }
 
